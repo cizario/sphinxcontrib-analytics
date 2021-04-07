@@ -1,7 +1,7 @@
 {% filter indent(width=4) %}
 window.ga = function () { ga.q.push(arguments) };
 ga.q = []; ga.l = +new Date;
-ga('create', '{{ tracking_id }}', 'auto');
+ga('create', '{{ vendor.tracking_id }}', 'auto');
 ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon');
 ga('send', 'pageview')
 {%- endfilter %}
