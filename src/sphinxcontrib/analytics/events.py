@@ -69,27 +69,22 @@ def config_inited(app, config):
 
                     else:
 
-                        if 'matomo_url' not in analytics['vendors']['matomo'].keys() or not analytics['vendors']['matomo']['matomo_url']:
+                        if 'url' not in analytics['vendors']['matomo'].keys() or not analytics['vendors']['matomo']['url']:
 
                             raise AnalyticsConfigError(
-                                "'matomo_url' must be defined for vendor 'matomo' without http/https schema, e.g: 'matomo.example.com'."
+                                "'url' must be defined for vendor 'matomo' without http/https schema, e.g: 'matomo.example.com'."
                             )
 
 def embed_analytics_code(app):
 
     analytics = app.config.analytics
 
-    if 'google' in analytics['enable']:
-        embed_code = app.builder.templates.render(
-            os.path.join(os.path.dirname(__file__), '_static', 'google-analytics.js_t'),
-            {'tracking_id': analytics['vendors']['google']['tracking_id']}
-        )
-        app.add_js_file(None, body=embed_code)
-        app.add_js_file('https://www.google-analytics.com/analytics.js', **{'async': 'async'})
-
-    if 'matomo' in analytics['enable']:
-        embed_code = app.builder.templates.render(
-            os.path.join(os.path.dirname(__file__), '_static', 'matomo-analytics.js_t'),
-            {'matomo_url': analytics['vendors']['matomo']['matomo_url']}
-        )
-        app.add_js_file(None, body=embed_code)
+    for vendor in analytics['enable']:
+        if vendor in ['google', 'matomo']:
+            embed_code = app.builder.templates.render(
+                os.path.join(os.path.dirname(__file__), '_static', vendor + '-analytics.js_t'),
+                {'vendor': analytics['vendors'][vendor]}
+            )
+            app.add_js_file(None, body=embed_code)
+            if vendor == 'google':
+                app.add_js_file('https://www.google-analytics.com/analytics.js', **{'async': 'async'})
