@@ -65,7 +65,7 @@ analytics = {
             'tracking_id': 'UA-XXXXX-Y'
         },
         'matomo': {
-            'matomo_url': 'matomo.example.com'
+            'url': 'matomo.example.com'
         }
     }
 }
